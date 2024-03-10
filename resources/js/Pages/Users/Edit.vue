@@ -41,6 +41,14 @@
                             <new-role-modal @success="setRole"/>
                         </div>
 
+                        <div class="form-group">
+                            <form-select-doctors
+                                v-model="form.doctor_id"
+                                :invalid-text="errors.doctor_id"
+                                label="Связать пользователя со списком врачей"
+                            />
+                        </div>
+
                         <form-input
                             label="Пароль"
                             :required="!user?.id"
@@ -73,15 +81,19 @@ import FormSelectRoles from "../../Shared/Form/FormSelectRoles.vue";
 import NewRoleModal from "../../Shared/Modals/NewRoleModal.vue";
 import FormSaveButton from "../../Shared/Form/FormSaveButton.vue";
 import FormCancelButton from "../../Shared/Form/FormCancelButton.vue";
+import FormSelectDoctors from "../../Shared/Form/FormSelectDoctors.vue";
 
 export default {
     props: ['user', 'errors'],
-    components: {FormCancelButton, FormSaveButton, NewRoleModal, FormSelectRoles, FormInput, Head, Link},
+    components: {
+        FormSelectDoctors,
+        FormCancelButton, FormSaveButton, NewRoleModal, FormSelectRoles, FormInput, Head, Link},
     data() {
         return {
             form: useForm({
                 name: this.user?.name,
                 username: this.user?.username,
+                doctor_id: this.user?.doctor_id,
                 password: null,
                 role: this.user?.roles[0].name || 'doctor'
             }),

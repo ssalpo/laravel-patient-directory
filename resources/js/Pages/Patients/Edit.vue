@@ -168,10 +168,9 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" v-if="$page.props.shared.userPermissions.includes('select_doctor_patients')">
                         <form-select-doctors
                             label-required
-                            v-if="$page.props.shared.userPermissions.includes('select_doctor_patients')"
                             ref="selectDoctors"
                             v-model="form.doctor_id"
                             :invalid-text="errors.doctor_id"

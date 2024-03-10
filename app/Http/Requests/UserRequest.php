@@ -28,6 +28,7 @@ class UserRequest extends FormRequest
             'username' => 'required|min:3|max:255|unique:users,username,'.$this->route('user'),
             'password' => 'min:2|max:255'.($this->isMethod('PUT') ? '|nullable' : '|required'),
             'role' => 'required|exists:roles,name',
+            'doctor_id' => 'nullable|exists:doctors,id',
         ];
     }
 }

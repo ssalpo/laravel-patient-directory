@@ -50,15 +50,18 @@ class PatientRequest extends FormRequest
     protected function prepareForValidation()
     {
         $fields = [
-            'created_by' => auth()->id(),
             'gender' => $this->gender == 1,
             'birthday' => $this->birthday ? Carbon::parse($this->birthday)->format('Y-m-d') : null,
             'sampling_date' => $this->sampling_date ? Carbon::parse($this->sampling_date)->format('Y-m-d H:i') : null,
             'sample_receipt_date' => $this->sample_receipt_date ? Carbon::parse($this->sample_receipt_date)->format('Y-m-d H:i') : null,
         ];
 
+        if ($this->isMethod('post')) {
+            $fields['created_by'] = auth()->id();
+        }
+
         if (! $this->user()?->can('select_doctor_patients')) {
-            $fields['doctor_id'] = auth()->id();
+            $fields['doctor_id'] = auth()->user()->doctor_id;
         }
 
         return $this->merge($fields);
