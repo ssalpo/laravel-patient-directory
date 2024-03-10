@@ -24,7 +24,7 @@ class PatientRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'name' => 'required|string|min:1|max:255',
             'phone' => 'nullable|string|min:1|max:255',
             'birthday' => 'required|date:Y-m-d',
@@ -40,11 +40,16 @@ class PatientRequest extends FormRequest
             'categories.*.description' => 'required|string|min:2|max:255',
             'photos' => 'nullable|array',
             'photos.*' => 'required|mimes:jpg,jpeg,png|max:200000',
-            'created_by' => 'required|integer',
             'location_id' => 'nullable|exists:locations,id',
             'medical_clinic_id' => 'required|exists:medical_clinics,id',
             'doctor_id' => 'required|exists:doctors,id',
         ];
+
+        if ($this->isMethod('post')) {
+            $rules['created_by'] = 'required|integer';
+        }
+
+        return $rules;
     }
 
     protected function prepareForValidation()

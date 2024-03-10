@@ -13,6 +13,11 @@
         <div class="container">
             <div class="card card-primary">
                 <div class="card-body">
+
+                    <div v-if="errors.doctor_id && !$page.props.shared.userPermissions.includes('select_doctor_patients')" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        Пользователь не привязан к списку врачей, обратитесь к администратору!
+                    </div>
+
                     <form-input
                         label="Ф.И.О"
                         required
@@ -211,6 +216,12 @@
 
                         <div v-if="errors.photos" class="error invalid-feedback">
                             {{ errors.photos }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div v-if="errors.doctor_id" class="error invalid-feedback">
+
                         </div>
                     </div>
                 </div>
