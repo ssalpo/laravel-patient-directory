@@ -106,10 +106,11 @@
                             <div class="row mt-2">
                                 <div class="col-3 col-sm-2 pb-2 pb-sm-0">
                                     <input type="text" v-model="category.code" class="form-control form-control-sm"
+                                           :data-some="category?.biopsyCustom"
                                            placeholder="Введите код, например A1 или B1">
                                 </div>
                                 <div class="col-9 col-sm-4 pb-2 pb-sm-0">
-                                    <div class="row" v-if="!category?.biopsyCustom" >
+                                    <div class="row" v-if="category?.biopsy !== 'свой вариант'">
                                         <div class="col-12">
                                             <select @change="biopsyCustomToggle(category, $event.target.value === 'свой вариант')" class="form-control form-control-sm" v-model="category.biopsy">
                                                 <option value="" disabled>Выберите тип биопсии</option>

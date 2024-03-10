@@ -25,7 +25,12 @@ class PatientCaseNumber extends Model
         return $this->belongsTo(Patient::class);
     }
 
-    public static function currentYearMaxNumber(?int $year = null)
+    public static function getLastCaseNumberByPatientId(int $patientId): ?int
+    {
+        return self::select('number')->wherePatientId($patientId)->value('number');
+    }
+
+    public static function currentYearMaxNumber(?int $year = null): int
     {
         return self::where('year', $year ?: date('Y'))->max('number');
     }

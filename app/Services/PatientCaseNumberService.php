@@ -9,14 +9,14 @@ class PatientCaseNumberService
     /**
      * Генерирует номера кейсов пациента
      */
-    public function generate(int $id, int $year, array $codes): array
+    public function generate(int $patientId, int $year, array $codes): array
     {
-        return \DB::transaction(function () use ($id, $year, $codes) {
+        return \DB::transaction(function () use ($patientId, $year, $codes) {
             $result = [];
 
-            $currentNumber = PatientCaseNumber::currentYearMaxNumber($year) + 1;
+            $currentNumber = PatientCaseNumber::getLastCaseNumberByPatientId($patientId) ?? PatientCaseNumber::currentYearMaxNumber($year) + 1;
 
-            $cleared = $this->clearIfDiffCodesExists($id, $year, $codes);
+            $cleared = $this->clearIfDiffCodesExists($patientId, $year, $codes);
 
             if (! $cleared) {
                 return $result;
@@ -24,7 +24,7 @@ class PatientCaseNumberService
 
             foreach ($codes as $code) {
                 $result[] = PatientCaseNumber::create([
-                    'patient_id' => $id,
+                    'patient_id' => $patientId,
                     'year' => $year,
                     'code' => $code,
                     'number' => $currentNumber,
