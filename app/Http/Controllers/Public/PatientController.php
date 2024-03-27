@@ -8,6 +8,7 @@ use App\Models\Patient;
 use App\Services\PatientService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class PatientController extends Controller
@@ -44,7 +45,7 @@ class PatientController extends Controller
      */
     public function show(string $hash): Response
     {
-        $patient = Patient::where('hashid', $hash)
+        $patient = Patient::where(DB::raw('BINARY `hashid`'), $hash)
             ->with('doctor', 'medicalClinic', 'location', 'caseNumbers')
             ->firstOrFail();
 
