@@ -12,7 +12,7 @@
 
                 <div class="col-12 col-sm-6 text-left text-sm-right mt-3 mt-sm-0">
                     <Link class="btn btn-outline-primary mr-2"
-                          v-if="$page.props.shared.userPermissions.includes('read_all_patients')"
+                          v-if="$page.props.shared.userPermissions.includes('share_patients') || $page.props.shared.userPermissions.includes('read_shared_patients')"
                           :href="route('patients.full_records')">
                         <i class="fa fa-list"></i> Все пациенты
                     </Link>

@@ -18,8 +18,7 @@ class PatientController extends Controller
     public function __construct(
         protected readonly PatientService $patientService
     ) {
-        $this->middleware('can:read_all_patients')->only(['fullRecords']);
-        $this->middleware('permission:share_patients|read_shared_patients')->only(['all']);
+        $this->middleware('permission:share_patients|read_shared_patients')->only(['all', 'fullRecords']);
         $this->middleware('permission:share_patients')->only(['sharePatient']);
         $this->middleware('can:create_patients')->only(['create', 'store']);
         $this->middleware('can:edit_patients,read_all_patients')->only(['edit', 'update']);
@@ -62,8 +61,21 @@ class PatientController extends Controller
      */
     public function fullRecords(): Response
     {
+        $patientsQuery = Patient::orderByDesc('created_at')->with('location', 'caseNumbers');
+
+        if (
+            auth()->user()?->hasPermissionTo('read_shared_patients') &&
+            ! auth()->user()?->hasPermissionTo('share_patients')
+        ) {
+            $patientsQuery = $patientsQuery
+                ->where(
+                    fn ($q) => $q->my('created_by')
+                        ->orWhere('shared_to_id', auth()->id())
+                );
+        }
+
         $patients = PatientResource::collection(
-            Patient::orderByDesc('created_at')->with('location', 'caseNumbers')->get()
+            $patientsQuery->get()
         );
 
         return inertia('Patients/FullRecords', compact('patients'));
