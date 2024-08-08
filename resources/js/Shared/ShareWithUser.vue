@@ -16,14 +16,18 @@ export default {
     methods: {
         onSelected({id}) {
             try {
-                this.form.post(route('patients.share', {patient: this.patientId, user: id}));
+                this.form
+                    .post(route('patients.share', {patient: this.patientId, user: id}))
+                    .then(() => window.location.reload());
             } catch (e) {
                 alert('Невозможно поделиться пациентом.');
             }
         },
         clear() {
             try {
-                this.form.post(route('patients.share.clear', {patient: this.patientId}));
+                this.form
+                    .post(route('patients.share.clear', {patient: this.patientId}))
+                    .then(() => window.location.reload());
             } catch (e) {
                 alert('Невозможно открепить.');
             }
