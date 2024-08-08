@@ -41,7 +41,11 @@ class PatientController extends Controller
             auth()->user()?->hasPermissionTo('read_shared_patients') &&
             ! auth()->user()?->hasPermissionTo('share_patients')
         ) {
-            $patientsQuery = $patientsQuery->where('shared_to_id', auth()->id());
+            $patientsQuery = $patientsQuery
+                ->where(
+                    fn ($q) => $q->my('created_by')
+                        ->orWhere('shared_to_id', auth()->id())
+                );
         }
 
         $patients = $patientsQuery->paginate(100)
