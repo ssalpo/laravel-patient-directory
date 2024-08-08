@@ -20,16 +20,33 @@ export default {
             } catch (e) {
                 alert('Невозможно поделиться пациентом.');
             }
+        },
+        clear() {
+            try {
+                this.form.post(route('patients.share.clear', {patient: this.patientId}));
+            } catch (e) {
+                alert('Невозможно открепить.');
+            }
         }
     }
 }
 </script>
 
 <template>
-    <form-select-users
-        v-model="form.user_id"
-        @selected="onSelected"
-    />
+    <div class="row">
+        <div class="col-10">
+            <form-select-users
+                v-model="form.user_id"
+                @selected="onSelected"
+            />
+        </div>
+
+        <div class="col-2" v-if="sharedToId">
+            <button type="button" @click="clear" class="btn btn-danger">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
 </template>
 
 <style scoped>

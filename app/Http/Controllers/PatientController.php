@@ -226,4 +226,9 @@ class PatientController extends Controller
     {
         $this->patientService->sharePatient($patientId, $userId);
     }
+
+    public function clearShared(int $patientId): void
+    {
+        $this->patientService->clearShared($patientId);
+    }
 }

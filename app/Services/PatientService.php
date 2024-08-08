@@ -166,12 +166,22 @@ class PatientService
     }
 
     /**
-     * Прикреплят пациентов к другим пользователям
+     * Прикреплят пациента к другим пользователям
      */
     public function sharePatient(int $patientId, int $userId): void
     {
         Patient::findOrFail($patientId)->update([
             'shared_to_id' => $userId,
+        ]);
+    }
+
+    /**
+     * Открепляет пациента от других пользователей
+     */
+    public function clearShared(int $patientId): void
+    {
+        Patient::findOrFail($patientId)->update([
+            'shared_to_id' => null,
         ]);
     }
 }

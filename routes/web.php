@@ -25,6 +25,7 @@ Route::middleware(['auth:sanctum', 'user.activity.check'])->group(static functio
     Route::get('/patients/daily-statistics', [PatientController::class, 'dailyStatistics'])->name('patients.daily-statistics');
     Route::post('/patients/{patient}/report', [PatientController::class, 'saveReport'])->name('patients.save.report');
     Route::post('/patients/{patient}/comment', [PatientController::class, 'saveComment'])->name('patients.save.comment');
+    Route::post('/patients/{patient}/share/clear', [PatientController::class, 'clearShared'])->name('patients.share.clear');
     Route::post('/patients/{patient}/share/{user}', [PatientController::class, 'sharePatient'])->name('patients.share');
     Route::get('/patients/{patient}/print', [PatientController::class, 'print'])->name('patients.print');
     Route::post('/patients/{patient}/mark-as-checked', [PatientController::class, 'markAsChecked'])->name('patients.mark_as_checked');
