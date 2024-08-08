@@ -30,8 +30,13 @@
                     <h4 class="mt-2 mb-3">Общие данные</h4>
 
                     <div class="table-responsive">
+
                         <table class="table table-bordered">
                         <tbody>
+                        <tr v-if="$page.props.shared.userPermissions.includes('share_patients')">
+                            <td width="400">Поделиться</td>
+                            <td> <share-with-user :patient-id="patient.id" :shared-to-id="patient.shared_to_id" /></td>
+                        </tr>
                         <tr>
                             <td width="400">Уникальный код пациента</td>
                             <td>{{ patient.uniq_code }}</td>
@@ -298,9 +303,10 @@
 <script>
 import {Head, Link, useForm} from "@inertiajs/vue3";
 import {QuillEditor} from '@vueup/vue-quill';
+import ShareWithUser from "../../Shared/ShareWithUser.vue";
 
 export default {
-    components: {Head, Link, QuillEditor},
+    components: {ShareWithUser, Head, Link, QuillEditor},
     props: ['patient', 'qrCode'],
     data: function () {
         return {

@@ -25,6 +25,7 @@ class UserRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:255',
+            'print_name' => 'nullable|min:3|max:255',
             'username' => 'required|min:3|max:255|unique:users,username,'.$this->route('user'),
             'password' => 'min:2|max:255'.($this->isMethod('PUT') ? '|nullable' : '|required'),
             'role' => 'required|exists:roles,name',

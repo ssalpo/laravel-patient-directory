@@ -24,6 +24,12 @@
                         />
 
                         <form-input
+                            label="Имя на странице печати"
+                            v-model.trim="form.print_name"
+                            :validation-error="errors.print_name"
+                        />
+
+                        <form-input
                             label="Логин для входа"
                             required
                             v-model.trim="form.username"
@@ -92,6 +98,7 @@ export default {
         return {
             form: useForm({
                 name: this.user?.name,
+                print_name: this.user?.print_name,
                 username: this.user?.username,
                 doctor_id: this.user?.doctor_id,
                 password: null,

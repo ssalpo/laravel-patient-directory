@@ -18,7 +18,9 @@ class PatientController extends Controller
     public function __construct(
         protected readonly PatientService $patientService
     ) {
-        $this->middleware('can:read_all_patients')->only(['all', 'fullRecords']);
+        $this->middleware('can:read_all_patients')->only(['fullRecords']);
+        $this->middleware('permission:share_patients|read_shared_patients')->only(['all']);
+        $this->middleware('permission:share_patients')->only(['sharePatient']);
         $this->middleware('can:create_patients')->only(['create', 'store']);
         $this->middleware('can:edit_patients,read_all_patients')->only(['edit', 'update']);
         $this->middleware('can:edit_patients')->only('deletePhoto');
@@ -31,10 +33,18 @@ class PatientController extends Controller
      */
     public function all(): Response
     {
-        $patients = Patient::filter(request()?->all())
+        $patientsQuery = Patient::filter(request()?->all())
             ->with('location', 'caseNumbers')
-            ->orderBy('created_at', 'DESC')
-            ->paginate(100)
+            ->orderBy('created_at', 'DESC');
+
+        if (
+            auth()->user()?->hasPermissionTo('read_shared_patients') &&
+            ! auth()->user()?->hasPermissionTo('share_patients')
+        ) {
+            $patientsQuery = $patientsQuery->where('shared_to_id', auth()->id());
+        }
+
+        $patients = $patientsQuery->paginate(100)
             ->onEachSide(0)
             ->withQueryString();
 
@@ -60,7 +70,11 @@ class PatientController extends Controller
      */
     public function dailyStatistics(): Response
     {
-        $statistics = $this->patientService->dailyStatistics();
+        $forShared = auth()->user()?->hasPermissionTo('read_shared_patients') && ! auth()->user()?->hasPermissionTo('share_patients');
+
+        $statistics = $this->patientService->dailyStatistics(
+            $forShared ? auth()->id() : null
+        );
 
         return inertia('Patients/DailyStatistics', compact('statistics'));
     }
@@ -206,5 +220,10 @@ class PatientController extends Controller
         $this->patientService->deletePhoto($id, $photo);
 
         return back();
+    }
+
+    public function sharePatient(int $patientId, int $userId): void
+    {
+        $this->patientService->sharePatient($patientId, $userId);
     }
 }

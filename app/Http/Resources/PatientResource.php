@@ -45,6 +45,7 @@ class PatientResource extends JsonResource
             'place_of_residence' => $this->place_of_residence,
             'print_date' => $this->print_date?->format('d.m.Y'),
             'created_at' => $this->created_at->format('d.m.Y'),
+            'shared_to_id' => $this->shared_to_id,
         ];
     }
 }

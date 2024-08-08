@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
             'shared' => [
                 'isAuth' => auth()->check(),
                 'userId' => auth()->id(),
+                'userPrintName' => $request->user()?->print_name,
                 'userRoles' => $request->user()?->roles->pluck('name') ?? [],
                 'userPermissions' => $userPermissions,
             ],

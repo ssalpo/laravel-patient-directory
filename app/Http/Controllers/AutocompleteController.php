@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Doctor;
 use App\Models\Location;
 use App\Models\MedicalClinic;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Models\Permission;
@@ -66,5 +67,12 @@ class AutocompleteController extends Controller
             'id' => $m->{$idField},
             'text' => $m->{$textField},
         ]);
+    }
+
+    public function users(): Collection
+    {
+        return $this->transformCollection(
+            User::where(fn ($q) => $this->searchFinder($q))->orderByDesc('created_at')->get()
+        );
     }
 }

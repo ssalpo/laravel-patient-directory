@@ -42,6 +42,7 @@ class Patient extends Model
         'place_of_residence',
         'location_id',
         'medical_clinic_id',
+        'shared_to_id',
     ];
 
     protected $casts = [
@@ -84,8 +85,9 @@ class Patient extends Model
     public function scopeMyByPermission(Builder $q, string $field = 'created_by'): void
     {
         $q->when(
-            ! auth()->user()?->can('read_all_patients'),
-            fn ($q) => $q->my($field)
+            auth()->user()?->hasPermissionTo('read_shared_patients') &&
+            ! auth()->user()?->hasPermissionTo('share_patients'),
+            fn ($q) => $q->my($field)->orWhere('shared_to_id', auth()->id())
         );
     }
 

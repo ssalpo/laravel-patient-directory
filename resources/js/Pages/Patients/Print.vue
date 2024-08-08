@@ -103,7 +103,7 @@
             <tr>
                 <td width="50%" class="text-right">Врач дерматопатолог:</td>
                 <td width="15%"></td>
-                <td width="50%">Султонов Р. А.</td>
+                <td width="50%">{{$page.props.shared.userPrintName || "Султонов Р. А."}}</td>
             </tr>
             <tr>
                 <td class="text-right">Дата:</td>
@@ -141,7 +141,7 @@
                 <tr>
                     <td width="50%" class="text-right">Врач дерматопатолог:</td>
                     <td width="15%"></td>
-                    <td width="50%">Султонов Р. А.</td>
+                    <td width="50%">{{$page.props.shared.userPrintName || "Султонов Р. А."}}</td>
                 </tr>
                 <tr>
                     <td class="text-right">Дата:</td>

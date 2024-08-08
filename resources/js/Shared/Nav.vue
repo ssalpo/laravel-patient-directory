@@ -19,7 +19,7 @@
 
                     <li class="nav-item"
                         :class="{ active : $page.component.startsWith('Patients/All') }"
-                        v-if="$page.props.shared.userPermissions.includes('read_all_patients')">
+                        v-if="$page.props.shared.userPermissions.includes('share_patients') || $page.props.shared.userPermissions.includes('read_shared_patients')">
                         <Link :href="route('patients.all')" class="nav-link">
                             Дерматопатология
                         </Link>

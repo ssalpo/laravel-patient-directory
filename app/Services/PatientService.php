@@ -60,12 +60,13 @@ class PatientService
     /**
      * Возвращает статистику по приему пациентов сгруппированный по дням
      */
-    public function dailyStatistics(): Collection
+    public function dailyStatistics(?int $sharedUserId = null): Collection
     {
         return Patient::select(
             DB::raw('CAST(sampling_date AS DATE) s_date'),
             DB::raw('COUNT(*) AS total')
         )
+            ->when($sharedUserId, fn ($q) => $q->where('shared_to_id', $sharedUserId))
             ->orderBy('s_date', 'DESC')
             ->groupBy('s_date')
             ->get();
@@ -162,5 +163,15 @@ class PatientService
                 'url' => $photo?->store('photos', 'public'),
             ]);
         }
+    }
+
+    /**
+     * Прикреплят пациентов к другим пользователям
+     */
+    public function sharePatient(int $patientId, int $userId): void
+    {
+        Patient::findOrFail($patientId)->update([
+            'shared_to_id' => $userId,
+        ]);
     }
 }
