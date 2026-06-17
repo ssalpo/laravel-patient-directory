@@ -101,6 +101,7 @@ class DoctorController extends Controller
         $filterParams = request()?->all();
 
         $patients = $doctor->patients()
+            ->with('caseNumbers')
             ->filter($filterParams)
             ->orderByDesc('created_at')
             ->paginate(100)
