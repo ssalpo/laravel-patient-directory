@@ -6,7 +6,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div v-if="$page.props.shared.isAuth" class="collapse navbar-collapse order-3" id="navbarCollapse">
+            <div v-if="$page.props.shared.isAuth" class="navbar-collapse order-3 collapse" id="navbarCollapse">
                 <!-- Left navbar links -->
                 <ul class="navbar-nav">
                     <li class="nav-item"
