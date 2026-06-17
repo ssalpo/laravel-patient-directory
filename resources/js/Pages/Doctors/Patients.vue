@@ -39,16 +39,22 @@
                             <tr>
                                 <th>Номер кейса</th>
                                 <th>Ф.И.О</th>
+                                <th>Диагноз</th>
                                 <th>Статус</th>
                                 <th v-if="$page.props.shared.userPermissions.includes('read_doctors')"></th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="(patient, index) in patients.data">
-                                <td>{{ patient.case_numbers }}</td>
+                                <td>{{ patient.case_numbers_joined }}</td>
                                 <td>
                                     <Link :href="route('patients.show', patient.id)">{{ patient.name }}</Link>
                                 </td>
+
+                                <td>
+                                    <div class="diagnosis-table" v-html="patient.diagnosis"></div>
+                                </td>
+
                                 <td :class="[patient.status === 1 ? 'text-danger' : 'text-success']">
                                     {{ patient.status === 1 ? 'На проверке' : 'Проверено' }}
                                 </td>
