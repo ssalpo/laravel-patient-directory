@@ -74,6 +74,11 @@ class PatientController extends Controller
                 );
         }
 
+        if (! auth()->user()?->hasPermissionTo('edit_users') && auth()->user()->doctor_id) {
+            $patientsQuery = $patientsQuery
+                ->where('doctor_id', auth()->user()->doctor_id);
+        }
+
         $patients = PatientResource::collection(
             $patientsQuery->get()
         );
