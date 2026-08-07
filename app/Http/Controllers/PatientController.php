@@ -61,6 +61,8 @@ class PatientController extends Controller
      */
     public function fullRecords(): Response
     {
+        $perPage = min(max(request()->integer('per_page', 500), 1), 1000);
+
         $patientsQuery = Patient::orderByDesc('created_at')->with('location', 'caseNumbers');
 
         if (
@@ -80,7 +82,9 @@ class PatientController extends Controller
         }
 
         $patients = PatientResource::collection(
-            $patientsQuery->get()
+            $patientsQuery->paginate($perPage)
+                ->onEachSide(0)
+                ->withQueryString()
         );
 
         return inertia('Patients/FullRecords', compact('patients'));
