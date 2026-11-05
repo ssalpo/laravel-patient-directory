@@ -18,9 +18,6 @@
                         ) ||
                         $page.props.shared.userPermissions.includes(
                             'read_shared_patients'
-                        ) ||
-                        $page.props.shared.userPermissions.includes(
-                            'read_histopathology'
                         )
                     "
                 >

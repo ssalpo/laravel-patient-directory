@@ -18,8 +18,7 @@ class PatientController extends Controller
     public function __construct(
         protected readonly PatientService $patientService
     ) {
-        $this->middleware('permission:share_patients|read_shared_patients')->only(['all']);
-        $this->middleware('permission:read_histopathology')->only(['fullRecords']);
+        $this->middleware('permission:share_patients|read_shared_patients')->only(['all', 'fullRecords']);
         $this->middleware('permission:share_patients')->only(['sharePatient']);
         $this->middleware('can:create_patients')->only(['create', 'store']);
         $this->middleware('can:edit_patients,read_all_patients')->only(['edit', 'update']);
