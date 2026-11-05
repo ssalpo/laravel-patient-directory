@@ -39,6 +39,8 @@ class SyncPermissions extends Command
             ['name' => 'manage_locations', 'readable_name' => 'Управлять локациями'],
             ['name' => 'share_patients', 'readable_name' => 'Делиться пациентами'],
             ['name' => 'read_shared_patients', 'readable_name' => 'Просматривать поделенных пациентов'],
+            ['name' => 'read_histopathology', 'readable_name' => 'Просматрировать блок гистопотология'],
+            ['name' => 'print_patients', 'readable_name' => 'Печатать карточки пациента'],
         ];
 
         foreach ($permissions as $permission) {
