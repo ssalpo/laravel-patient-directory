@@ -75,7 +75,15 @@
                                 <tr>
                                     <th width="150">Номер кейса</th>
                                     <th width="250">Ф.И.О</th>
-                                    <th>Диагноз</th>
+                                    <th
+                                        v-if="
+                                            $page.props.shared.userPermissions.includes(
+                                                'read_histopathology'
+                                            )
+                                        "
+                                    >
+                                        Диагноз
+                                    </th>
                                     <th width="130">Статус</th>
                                 </tr>
                             </thead>
@@ -95,6 +103,11 @@
                                     </td>
                                     <td>
                                         <div
+                                            v-if="
+                                                $page.props.shared.userPermissions.includes(
+                                                    'read_histopathology'
+                                                )
+                                            "
                                             class="diagnosis-table"
                                             v-html="patient.diagnosis"
                                         ></div>
