@@ -37,8 +37,11 @@ class PatientController extends Controller
             ->orderBy('created_at', 'DESC');
 
         if (
-            auth()->user()?->hasPermissionTo('read_shared_patients') &&
-            ! auth()->user()?->hasPermissionTo('share_patients')
+            ! auth()->user()?->hasPermissionTo('read_histopathology') ||
+            (
+                auth()->user()?->hasPermissionTo('read_shared_patients') &&
+                ! auth()->user()?->hasPermissionTo('share_patients')
+            )
         ) {
             $patientsQuery = $patientsQuery
                 ->where(
