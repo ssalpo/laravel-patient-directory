@@ -101,13 +101,14 @@
                                             >{{ patient.name }}</Link
                                         >
                                     </td>
-                                    <td>
+                                    <td
+                                        v-if="
+                                            $page.props.shared.userPermissions.includes(
+                                                'read_histopathology'
+                                            )
+                                        "
+                                    >
                                         <div
-                                            v-if="
-                                                $page.props.shared.userPermissions.includes(
-                                                    'read_histopathology'
-                                                )
-                                            "
                                             class="diagnosis-table"
                                             v-html="patient.diagnosis"
                                         ></div>
