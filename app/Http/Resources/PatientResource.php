@@ -14,6 +14,11 @@ class PatientResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $canAccessExtendedPatientData = ! (
+            $request->user()?->hasPermissionTo('read_all_patients')
+            && ! $request->user()?->hasPermissionTo('edit_users')
+        );
+
         return [
             'id' => $this->id,
             'uniq_code' => $this->uniq_code,
@@ -31,13 +36,13 @@ class PatientResource extends JsonResource
             'doctor' => DoctorResource::make($this->whenLoaded('doctor')),
             'medical_clinic_id' => $this->medical_clinic_id,
             'medical_clinic' => MedicalClinicResource::make($this->whenLoaded('medicalClinic')),
-            'categories' => $this->categories,
-            'categories_formatted' => implode(', ', $this->categories_formatted),
-            'microscopic_description' => $this->microscopic_description,
-            'diagnosis' => $this->diagnosis,
-            'note' => $this->note,
-            'note_text_count' => strlen(strip_tags($patient->note ?? '')),
-            'comment' => $this->comment,
+            'categories' => $this->when($canAccessExtendedPatientData, $this->categories),
+            'categories_formatted' => $this->when($canAccessExtendedPatientData, implode(', ', $this->categories_formatted)),
+            'microscopic_description' => $this->when($canAccessExtendedPatientData, $this->microscopic_description),
+            'diagnosis' => $this->when($canAccessExtendedPatientData, $this->diagnosis),
+            'note' => $this->when($canAccessExtendedPatientData, $this->note),
+            'note_text_count' => $this->when($canAccessExtendedPatientData, strlen(strip_tags($this->note ?? ''))),
+            'comment' => $this->when($canAccessExtendedPatientData, $this->comment),
             'status' => $this->status,
             'photos' => PhotoResource::collection($this->whenLoaded('photos')),
             'hashid' => $this->hashid,

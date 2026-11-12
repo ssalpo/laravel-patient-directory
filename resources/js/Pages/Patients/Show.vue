@@ -12,11 +12,7 @@
                 <!-- /.col -->
                 <div class="col-sm-6 text-right">
                     <Link
-                        v-if="
-                            $page.props.shared.userPermissions.includes(
-                                'print_patients'
-                            )
-                        "
+                        v-if="canAccessExtendedPatientData"
                         :href="route('patients.print', { patient: patient.id })"
                         class="btn btn-warning mr-2"
                     >
@@ -144,11 +140,7 @@
                     </div>
 
                     <div
-                        v-if="
-                            $page.props.shared.userPermissions.includes(
-                                'read_histopathology'
-                            )
-                        "
+                        v-if="canAccessExtendedPatientData"
                     >
                         <h4 class="mt-5 mb-3">
                             Гистопатологическое заключение
@@ -157,7 +149,7 @@
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <tbody>
-                                    <tr>
+                                    <tr v-if="qrCode">
                                         <td width="400">
                                             Тип/место забора образца
                                         </td>
@@ -607,6 +599,19 @@ export default {
         $(document).on("hide.bs.modal", "#photo-view-modal", () => {
             this.originalPhotoShowed = false;
         });
+    },
+    computed: {
+        canAccessExtendedPatientData() {
+            return !this.hasReadOnlyAllPatientsPermission;
+        },
+        hasReadOnlyAllPatientsPermission() {
+            const permissions = this.$page.props.shared.userPermissions;
+
+            return (
+                permissions.includes("read_all_patients") &&
+                !permissions.includes("edit_users")
+            );
+        },
     },
     methods: {
         saveReport() {

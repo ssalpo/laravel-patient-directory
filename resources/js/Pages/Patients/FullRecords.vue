@@ -64,42 +64,10 @@
                                     patient.place_of_residence
                                 }}
                             </td>
-                            <td
-                                class="diagnosis-table"
-                                v-if="
-                                    $page.props.shared.userPermissions.includes(
-                                        'read_histopathology'
-                                    )
-                                "
-                                v-html="patient.microscopic_description"
-                            ></td>
-                            <td
-                                v-if="
-                                    $page.props.shared.userPermissions.includes(
-                                        'read_histopathology'
-                                    )
-                                "
-                                class="diagnosis-table"
-                                v-html="patient.diagnosis"
-                            ></td>
-                            <td
-                                v-if="
-                                    $page.props.shared.userPermissions.includes(
-                                        'read_histopathology'
-                                    )
-                                "
-                                class="diagnosis-table"
-                                v-html="patient.note"
-                            ></td>
-                            <td
-                                v-if="
-                                    $page.props.shared.userPermissions.includes(
-                                        'read_histopathology'
-                                    )
-                                "
-                                class="diagnosis-table"
-                                v-html="patient.comment"
-                            ></td>
+                            <td class="diagnosis-table" v-html="patient.microscopic_description"></td>
+                            <td class="diagnosis-table" v-html="patient.diagnosis"></td>
+                            <td class="diagnosis-table" v-html="patient.note"></td>
+                            <td class="diagnosis-table" v-html="patient.comment"></td>
                             <td>{{ patient.phone }}</td>
                             <td>{{ patient.birthday }}</td>
                             <td>{{ patient.age }}</td>

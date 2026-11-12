@@ -78,7 +78,6 @@
     </tbody>
 </table>
 
-<div v-if="$page.props.shared.userPermissions.includes('read_histopathology')">
 <h4 style="font-weight: normal; font-size: 16px; margin-top: 40px">Гистопатологическое заключение</h4>
 
 <table class="table table-bordered" width="100%" cellpadding="10" cellspacing="0">
@@ -115,8 +114,6 @@
     </tr>
     </tbody>
 </table>
-</div>
-
 <table style="margin-top: 30px" width="100%">
     <tr>
         <td width="50%" style="text-align: right">Врач дерматопатолог:</td>

@@ -18,10 +18,11 @@ class PatientController extends Controller
     public function __construct(
         protected readonly PatientService $patientService
     ) {
-        $this->middleware('permission:share_patients|read_shared_patients')->only(['all', 'fullRecords']);
+        $this->middleware('permission:share_patients|read_shared_patients|read_all_patients')->only('all');
+        $this->middleware('permission:share_patients|read_shared_patients')->only('fullRecords');
         $this->middleware('permission:share_patients')->only(['sharePatient']);
         $this->middleware('can:create_patients')->only(['create', 'store']);
-        $this->middleware('can:edit_patients,read_all_patients')->only(['edit', 'update']);
+        $this->middleware('can:edit_patients')->only(['edit', 'update']);
         $this->middleware('can:edit_patients')->only('deletePhoto');
         $this->middleware('can:add_report')->only(['saveReport', 'submit']);
         $this->middleware('can:add_comment')->only(['saveComment']);
@@ -37,11 +38,9 @@ class PatientController extends Controller
             ->orderBy('created_at', 'DESC');
 
         if (
-            ! auth()->user()?->hasPermissionTo('read_histopathology') &&
-            (
-                auth()->user()?->hasPermissionTo('read_shared_patients') &&
-                ! auth()->user()?->hasPermissionTo('share_patients')
-            )
+            ! auth()->user()?->hasPermissionTo('read_all_patients') &&
+            auth()->user()?->hasPermissionTo('read_shared_patients') &&
+            ! auth()->user()?->hasPermissionTo('share_patients')
         ) {
             $patientsQuery = $patientsQuery
                 ->where(
@@ -64,6 +63,8 @@ class PatientController extends Controller
      */
     public function fullRecords(): Response
     {
+        abort_if($this->hasReadOnlyAllPatientsPermission(), 403);
+
         $perPage = min(max(request()->integer('per_page', 500), 1), 1000);
 
         $patientsQuery = Patient::orderByDesc('created_at')->with('location', 'caseNumbers');
@@ -156,7 +157,9 @@ class PatientController extends Controller
             ->findOrFail($id);
 
         return inertia('Patients/Show', [
-            'qrCode' => (string) QrCode::size(100)->generate(route('public.patients.show', $patient->hashid)),
+            'qrCode' => $this->hasReadOnlyAllPatientsPermission()
+                ? null
+                : (string) QrCode::size(100)->generate(route('public.patients.show', $patient->hashid)),
             'patient' => PatientResource::make($patient),
         ]);
     }
@@ -222,6 +225,8 @@ class PatientController extends Controller
      */
     public function print(Patient $patient): Response
     {
+        abort_unless($this->canAccessExtendedPatientData(), 403);
+
         $patient->load(['doctor', 'location', 'caseNumbers']);
 
         return inertia('Patients/Print', [
@@ -258,5 +263,18 @@ class PatientController extends Controller
     public function clearShared(int $patientId): void
     {
         $this->patientService->clearShared($patientId);
+    }
+
+    private function canAccessExtendedPatientData(): bool
+    {
+        return ! $this->hasReadOnlyAllPatientsPermission();
+    }
+
+    private function hasReadOnlyAllPatientsPermission(): bool
+    {
+        $user = auth()->user();
+
+        return $user?->hasPermissionTo('read_all_patients')
+            && ! $user?->hasPermissionTo('edit_users');
     }
 }

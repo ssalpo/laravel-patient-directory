@@ -22,6 +22,7 @@
                     "
                 >
                     <Link
+                        v-if="!hasReadOnlyAllPatientsPermission"
                         class="btn btn-outline-primary mr-2"
                         :href="route('patients.full_records')"
                     >
@@ -76,11 +77,7 @@
                                     <th width="150">Номер кейса</th>
                                     <th width="250">Ф.И.О</th>
                                     <th
-                                        v-if="
-                                            $page.props.shared.userPermissions.includes(
-                                                'read_histopathology'
-                                            )
-                                        "
+                                        v-if="canAccessExtendedPatientData"
                                     >
                                         Диагноз
                                     </th>
@@ -102,11 +99,7 @@
                                         >
                                     </td>
                                     <td
-                                        v-if="
-                                            $page.props.shared.userPermissions.includes(
-                                                'read_histopathology'
-                                            )
-                                        "
+                                        v-if="canAccessExtendedPatientData"
                                     >
                                         <div
                                             class="diagnosis-table"
@@ -158,6 +151,19 @@ export default {
             status: null,
         },
     }),
+    computed: {
+        canAccessExtendedPatientData() {
+            return !this.hasReadOnlyAllPatientsPermission;
+        },
+        hasReadOnlyAllPatientsPermission() {
+            const permissions = this.$page.props.shared.userPermissions;
+
+            return (
+                permissions.includes("read_all_patients") &&
+                !permissions.includes("edit_users")
+            );
+        },
+    },
     methods: {
         doSearch() {
             this.$inertia.get("/patients/all", pickBy(this.search), {

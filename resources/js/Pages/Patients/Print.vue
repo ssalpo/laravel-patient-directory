@@ -58,6 +58,7 @@
             </tbody>
         </table>
 
+        <template v-if="canAccessExtendedPatientData">
         <div class="mt-5 mb-3 page-title-second">Гистопатологическое заключение</div>
 
         <table class="table table-bordered">
@@ -98,6 +99,7 @@
             </tr>
             </tbody>
         </table>
+        </template>
 
         <table class="sign-block mt-5 mb-5" width="100%">
             <tr>
@@ -125,7 +127,7 @@
             </tr>
         </table>
 
-        <div class="only-int-print" v-if="movedNoteToNewPage">
+        <div class="only-int-print" v-if="canAccessExtendedPatientData && movedNoteToNewPage">
             <div class="pagebreak"></div>
 
             <table class="table table-bordered">
@@ -173,6 +175,16 @@ export default {
                 print_date: this.patient.print_date
             })
         }
+    },
+    computed: {
+        canAccessExtendedPatientData() {
+            const permissions = this.$page.props.shared.userPermissions;
+
+            return !(
+                permissions.includes('read_all_patients') &&
+                !permissions.includes('edit_users')
+            );
+        },
     },
     methods: {
         savePrintDate() {

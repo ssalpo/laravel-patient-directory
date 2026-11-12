@@ -86,6 +86,7 @@ class Patient extends Model
     {
         $q->when(
             auth()->user()?->hasPermissionTo('read_shared_patients') &&
+            ! auth()->user()?->hasPermissionTo('read_all_patients') &&
             ! auth()->user()?->hasPermissionTo('share_patients'),
             fn ($q) => $q->my($field)->orWhere('shared_to_id', auth()->id())
         );
